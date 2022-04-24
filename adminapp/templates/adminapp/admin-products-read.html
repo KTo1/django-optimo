@@ -1,0 +1,58 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="mt-4">Продукты</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table mr-1"></i>
+                Продукты
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Категория</th>
+                            <th>Описание</th>
+                            <th>Цена</th>
+                            <th>Количество</th>
+                            <th>Активный</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Категория</th>
+                            <th>Описание</th>
+                            <th>Цена</th>
+                            <th>Количество</th>
+                            <th>Активный</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for product in products %}
+                            <tr {% if not product.is_active %} class="table-warning" {% endif %}>
+                                <td><a href="{% url 'adminapp:admin_product_update' product.id %}" style="color: dodgerblue">{{ product.name }}</a></td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.description }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td class="text-center">
+                                    <i class="fas fa-{% if product.is_active %}check{% else %}times{% endif %}-circle"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'adminapp:admin_product_create' %}">
+                    <button class="btn btn-success">Создать продукт</button>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

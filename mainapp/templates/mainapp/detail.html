@@ -1,0 +1,60 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% load l10n %}
+
+
+{% block css %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <h1 class="my-4">GeekShop</h1>
+                <div class="list-group">
+                    <a href="{% url 'mainapp:products'%}"
+                       class="list-group-item">Все</a>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <a href="#">
+                                <img class="card-img-top"
+                                     src="{% if products.image %}{{ products.image.url }}{% else %} {% endif %}"
+                                     alt="">
+                            </a>
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    {{ products.name }}
+                                </h4>
+                                <h5> {{ products.price|localize }} руб.</h5>
+                                <p class="card-text"> {{ products.description }}</p>
+                                <p class="card-quantity"> В наличии: {{ products.quantity }} шт.</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="{% url 'basketapp:basket_add' products.id %}"
+                                   class="btn btn-outline-success">Отправить в корзину</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; GeekShop 2022</p>
+        </div>
+    </footer>
+{% endblock %}
