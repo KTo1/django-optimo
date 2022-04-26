@@ -26,10 +26,6 @@ class ProfileTemplateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin
     def get_success_url(self):
         return reverse_lazy('authapp:profile', kwargs={'pk': self.request.user.id})
 
-    def get(self, request, *args, **kwargs):
-        self.baskets = Basket.objects.filter(user=request.user)
-        return super().get(request, *args, **kwargs)
-
 
 class RegisterTemplateView(CreateView, BaseClassContextMixin):
     ''' view for user register'''

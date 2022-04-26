@@ -29,12 +29,11 @@ class UserDispatchMixin(View):
 class BaseClassContextMixin(ContextMixin):
     title = ''
     categories = []
-    baskets = []
     def get_context_data(self, **kwargs):
         contex = super(BaseClassContextMixin, self).get_context_data(**kwargs)
         contex['title'] = self.title
         contex['categories'] = self.categories
-        contex['baskets'] = self.baskets
+
         return contex
 
 
