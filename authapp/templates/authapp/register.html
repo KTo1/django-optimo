@@ -3,8 +3,8 @@
 
 {% block content %}
     <div class="col-lg-7">
-        {% if form.errors %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+        {% if form.errors or messages %}
+            <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show" role="alert"
                  style="margin-top: 50px;">
                 {% if messages %}
                     {% for message in messages %}
