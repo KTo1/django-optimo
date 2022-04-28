@@ -1,3 +1,6 @@
+import hashlib
+import random
+
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.db.models.fields.files import ImageFieldFile
@@ -53,6 +56,14 @@ class UserAdminRegisterForm(UserCreationForm):
             field.widget.attrs['class'] = 'form-control py-4'
 
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
+
+    def save(self, commit=True):
+        user = super(UserAdminRegisterForm, self).save()
+        user.is_active = False
+        salt = hashlib.sha1(str(random.Random()).encode('utf-8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf-8')).hexdigest()
+        user.save()
+        return user
 
     def clean_username(self):
         username = self.cleaned_data['username']

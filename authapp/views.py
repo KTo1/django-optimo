@@ -1,4 +1,8 @@
-from django.contrib import auth
+from django.conf import settings
+from django.contrib import auth, messages
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LogoutView
 
@@ -22,20 +26,47 @@ class ProfileTemplateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin
     def get_success_url(self):
         return reverse_lazy('authapp:profile', kwargs={'pk': self.request.user.id})
 
-    def get(self, request, *args, **kwargs):
-        self.baskets = Basket.objects.filter(user=request.user)
-        return super().get(request, *args, **kwargs)
 
-
-class RegisterTemplateView(CreateView, SuccessMessageMixin, BaseClassContextMixin):
+class RegisterTemplateView(CreateView, BaseClassContextMixin):
     ''' view for user register'''
 
     model = User
     template_name = 'authapp/register.html'
     title = 'GeekShop - Регистрация'
     form_class = UserRegisterForm
-    success_message = "Вы успешно зарегистрировались, можете войти на сайт используя свой логин и пароль."
+    success_message = "Вы успешно зарегистрировались, вам на почту отправлено письмо с активацией."
     success_url = reverse_lazy('authapp:login')
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            if self.send_verify_link(user):
+                messages.success(request, self.success_message)
+
+        context = {'form' : form}
+        return render(request, self.template_name, context)
+
+    def send_verify_link(self, user):
+        verify_link = reverse('authapp:verify', args=[user.email, user.activation_key])
+        subject = 'Активация аккаунта GeekShop'
+        message = f'Уважаемый {user.username}. \n Для подтверждения учетной записи перейдите по ссылке {settings.DOMAIN_NAME}{verify_link}'
+
+        return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+    def verify(self, email, activation_key):
+        try:
+            user = User.objects.get(email=email)
+            if user and user.activation_key == activation_key and not user.is_activation_key_expires():
+                user.activation_key = None
+                user.activation_key_expires = None
+                user.is_active = True
+                user.save()
+                auth.login(self, user)
+            return render(self, 'authapp/verification.html')
+
+        except Exception as e:
+            HttpResponseRedirect(reverse('index'))
 
 
 class LoginTemplateView(FormView, BaseClassContextMixin):
@@ -62,6 +93,3 @@ class LogoutTemplateView(LogoutView):
     ''' view for user logout'''
 
     template_name = 'mainapp/index.html'
-
-
-
