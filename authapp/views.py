@@ -2,13 +2,13 @@ from django.conf import settings
 from django.contrib import auth, messages
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LogoutView
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
-from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from authapp.models import User
 from basketapp.models import Basket
 from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin, SuccessMessageMixin
@@ -25,6 +25,20 @@ class ProfileTemplateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin
 
     def get_success_url(self):
         return reverse_lazy('authapp:profile', kwargs={'pk': self.request.user.id})
+
+    def post(self, request, *args, **kwargs):
+        form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+        form_profile = UserProfileEditForm(data=request.POST, files=request.FILES, instance=request.user.userprofile)
+        if form.is_valid() and form_profile.is_valid():
+            form.save()
+
+        return redirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileTemplateView, self).get_context_data()
+        context['profile'] = UserProfileEditForm(instance=self.request.user.userprofile)
+
+        return context
 
 
 class RegisterTemplateView(CreateView, BaseClassContextMixin):
@@ -62,7 +76,7 @@ class RegisterTemplateView(CreateView, BaseClassContextMixin):
                 user.activation_key_expires = None
                 user.is_active = True
                 user.save()
-                auth.login(self, user)
+                auth.login(self, user, backend='django.contrib.auth.backends.ModelBackend')
             return render(self, 'authapp/verification.html')
 
         except Exception as e:
@@ -84,7 +98,7 @@ class LoginTemplateView(FormView, BaseClassContextMixin):
 
         user = auth.authenticate(username=username, password=password)
         if user.is_active:
-            auth.login(self.request, user)
+            auth.login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
 
         return super(LoginTemplateView, self).form_valid(form)
 
