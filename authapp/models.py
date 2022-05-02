@@ -37,6 +37,7 @@ class User(AbstractUser):
     def is_activation_key_expires(self):
         return not now() <= self.activation_key_expires + timedelta(hours=48)
 
+
 class UserProfile(models.Model):
     MALE = 'M'
     FEMALE = 'W'
@@ -48,6 +49,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, null=True, unique=True, db_index=True, on_delete=models.CASCADE)
     about = models.TextField(verbose_name='о себе', blank=True, null=False)
     gender = models.CharField(verbose_name='пол', choices=GENDER_CHOICES, blank=True, max_length=2)
+    langs = models.TextField(verbose_name='языки', blank=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

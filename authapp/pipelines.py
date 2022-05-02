@@ -5,7 +5,6 @@ from datetime import datetime
 from urllib.parse import urlencode, urlunparse
 
 from django.utils import timezone
-from django.conf import settings
 from social_core.exceptions import AuthException, AuthForbidden
 
 from authapp.models import UserProfile
@@ -21,7 +20,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                           'method/users.get',
                           None,
                           urlencode(
-                              OrderedDict(fields=','.join(('bdate', 'sex', 'about')),
+                              OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'personal')),
                                           access_token=response['access_token'],
                                           v=5.131)),
                           None))
@@ -39,9 +38,6 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         0:None
     }
 
-    user.userprofile.gender = data_sex[data['sex']]
-    user.userprofile.about = data['about']
-
     bdate = datetime.strptime(data['bdate'], '%d.%m.%Y').date()
     age = timezone.now().date().year - bdate.year
 
@@ -49,7 +45,13 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         user.delete()
         raise AuthForbidden('social_core.backends.vk.VKOAuth2')
 
-    user.get_remote_image(response.get('photo'))
+    langs = data['personal'].get('langs') if data['personal'].get('langs') else []
+
+    user.userprofile.gender = data_sex[data['sex']]
+    user.userprofile.about = data['about']
+    user.userprofile.langs = ','.join(langs)
     user.age = age
+
+    user.get_remote_image(response.get('photo'))
 
     user.save()

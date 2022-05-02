@@ -79,20 +79,25 @@
                                 почты</label>
                             {{ form.email }}
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-2">
                             <label class="small mb-1" for="{{ form.age.id_for_label }}">Возраст</label>
                             {{ form.age }}
                         </div>
+                        <div class="col-lg-2">
+                            <label class="small mb-1" for="{{ profile.gender.id_for_label }}">Пол</label>
+                            {{ profile.gender }}
+                        </div>
+
                     </div>
 
                     <div class="form-row">
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ profile.gender.id_for_label }}">Пол</label>
-                            {{ profile.gender }}
-                        </div>
-                        <div class="col-lg-6">
                             <label class="small mb-1" for="{{ profile.about.id_for_label }}">Обо мне</label>
                             {{ profile.about }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ profile.langs.id_for_label }}">Языки</label>
+                            {{ profile.langs }}
                         </div>
                     </div>
 
