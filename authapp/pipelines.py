@@ -5,9 +5,11 @@ from datetime import datetime
 from urllib.parse import urlencode, urlunparse
 
 from django.utils import timezone
+from django.conf import settings
 from social_core.exceptions import AuthException, AuthForbidden
 
 from authapp.models import UserProfile
+
 
 
 def save_user_profile(backend, user, response, *args, **kwargs):
@@ -47,7 +49,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         user.delete()
         raise AuthForbidden('social_core.backends.vk.VKOAuth2')
 
-    # user.image = response.get('photo')
+    user.get_remote_image(response.get('photo'))
     user.age = age
 
     user.save()
