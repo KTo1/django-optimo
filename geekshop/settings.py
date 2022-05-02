@@ -16,6 +16,7 @@ from pathlib import Path
 import django.core.mail.backends.base
 import social_core.backends.vk
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -184,6 +185,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
 # python -m smtpd -n -c DebuggingServer localhost:25
 # 8151955
 # n8R7VYVXavyF5eLj33EV
