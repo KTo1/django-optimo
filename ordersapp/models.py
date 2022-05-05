@@ -26,7 +26,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     created = models.DateTimeField(verbose_name='создан', auto_now=True)
     updated = models.DateTimeField(verbose_name='обновлен', auto_now_add=True)
-    paid = models.DateTimeField(verbose_name='оплачен')
+    paid = models.DateTimeField(verbose_name='оплачен', null=True, blank=True)
     status = models.CharField(verbose_name='статус', choices=ORDER_STATUS_CHOICES, max_length=3, default=FORMING)
     is_active = models.BooleanField(verbose_name='активен', default=True)
 

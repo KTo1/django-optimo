@@ -10,7 +10,6 @@ from django.contrib.auth.views import LogoutView
 from django.urls import reverse, reverse_lazy
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from authapp.models import User
-from basketapp.models import Basket
 from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin, SuccessMessageMixin
 
 

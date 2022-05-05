@@ -1,4 +1,4 @@
-{% extends 'products/base.html' %}
+{% extends 'mainapp/base.html' %}
 {% load static %}
 
 
@@ -30,20 +30,20 @@
                         <td>{{ item.updated|date:"Y-m-d H:i:s" }}</td>
                         <td>{{ item.get_status_display }}</td>
                         <td>
-                            <a href="{% url 'orders:read' item.pk %}">
+                            <a href="{% url 'ordersapp:read' item.pk %}">
                                 посмотреть
                             </a>
                         </td>
                         <td>
                             {% if item.status == 'FM' %}
-                                <a href="{% url 'orders:update' item.pk %}">
+                                <a href="{% url 'ordersapp:update' item.pk %}">
                                     редактировать
                                 </a>
                             {% endif %}
                         </td>
                         <td>
                             {% if item.status == 'FM' %}
-                                <a href="{% url 'orders:delete' item.pk %}">
+                                <a href="{% url 'ordersapp:delete' item.pk %}">
                                     удалить
                                 </a>
                             {% endif %}
@@ -60,7 +60,7 @@
             </a>
         </button>
         <button class="btn btn-warning btn-round">
-            <a href="{% url 'orders:create' %}">
+            <a href="{% url 'ordersapp:create' %}">
                 новый
             </a>
         </button>
