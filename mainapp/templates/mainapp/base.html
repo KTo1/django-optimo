@@ -44,18 +44,18 @@
                 {% else %}
                     <li class="nav-item">
                         <div class="dropdown">
-                            <a class="dropdown-toggle" href="" data-toggle="dropdown">
+                            <a class="nav-link dropdown-toggle" href="" data-toggle="dropdown">
                                 {{ user.username|default:'Пользователь' }}
                                 <span class="caret"> </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="nav-link" href="{% url 'authapp:profile' user.id %}">
+                                    <a class="nav-link text-dark" href="{% url 'authapp:profile' user.id %}">
                                         Профиль
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="nav-link" href="{% url 'ordersapp:list' %}">
+                                    <a class="nav-link text-dark" href="{% url 'ordersapp:list' %}">
                                         Заказы
                                     </a>
                                 </li>

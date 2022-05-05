@@ -57,9 +57,12 @@ class OrderCreate(CreateView, BaseClassContextMixin):
         with transaction.atomic():
             form.instance.user = self.request.user
             self.object = form.save()
+
             if orderitems.is_valid():
                 orderitems.instance = self.object
                 orderitems.save()
+                Basket.objects.filter(user=self.request.user).delete()
+
             if self.object.get_total_cost() == 0:
                 self.object.delete()
                 
