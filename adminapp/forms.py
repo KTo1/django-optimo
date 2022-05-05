@@ -8,6 +8,9 @@ from authapp.models import User
 from mainapp.models import Products, ProductCategories
 from django import forms
 
+from ordersapp.models import Order
+
+
 class Valid:
     description = ''
 
@@ -107,6 +110,21 @@ class UserAdminProfileForm(UserChangeForm):
             raise ValidationError(Valid.description)
 
         return image
+
+
+class UserAdminOrderForm(forms.ModelForm):
+    '''form for admin order detail'''
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(UserAdminOrderForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
+        self.fields['image'].widget.attrs['class'] = 'custom-file-input'
 
 
 class UserAdminCategoryForm(forms.ModelForm):
