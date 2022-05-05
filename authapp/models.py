@@ -17,7 +17,7 @@ class User(AbstractUser):
     ''' model for users  '''
 
     email = models.EmailField(unique=True)
-    image = models.ImageField(upload_to='users_images', blank=True)
+    image = models.ImageField(upload_to='users_images', null=True, blank=True)
     age = models.PositiveIntegerField(default=18)
     image_url = models.URLField(default=None, null=True, blank=True)
 

@@ -5,6 +5,7 @@ from mainapp.models import Products
 
 
 class Order(models.Model):
+    ''' model for orders '''
 
     FORMING = 'FM'
     SEND_TO_PROCESSED = 'STP'
@@ -51,9 +52,11 @@ class Order(models.Model):
 
         self.is_active = False
         self.save()
-            
+
 
 class OrderItem(models.Model):
+    ''' model for order items '''
+
     order = models.ForeignKey(Order, verbose_name='заказ', related_name='orderitems', on_delete=models.CASCADE)
     product = models.ForeignKey(Products, verbose_name='товар', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
