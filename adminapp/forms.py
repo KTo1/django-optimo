@@ -124,7 +124,6 @@ class UserAdminOrderForm(forms.ModelForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
-        self.fields['image'].widget.attrs['class'] = 'custom-file-input'
 
 
 class UserAdminCategoryForm(forms.ModelForm):
