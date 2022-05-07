@@ -1,4 +1,6 @@
 # Create your views here.
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 
@@ -82,34 +84,27 @@ class OrderUpdate(UpdateView, SuccessMessageMixin, BaseClassContextMixin, Custom
     success_url = reverse_lazy('adminapp:admin_orders')
 
 
-    def get_context_data(self, **kwargs):
-        context = super(OrderUpdate, self).get_context_data()
-        #
-        # OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=1)
-        # if self.request.POST:
-        #     form_set = OrderFormSet(self.request.POST, instance=self.object)
-        # else:
-        #     form_set = OrderFormSet(instance=self.object)
-        #     for num, form in enumerate(form_set.forms):
-        #         if form.instance.pk:
-        #             form.initial['price'] = form.instance.product.price
-        #
-        # context['orderitems'] = form_set
+@login_required
+def order_next(request, pk):
+    ''' view for change order status to next '''
 
-        return context
+    order = Order.objects.get(pk=pk)
+    if order.can_processed():
+        order.status = order.get_next_status(order.status)
+        order.save()
 
-    def form_valid(self, form):
-        context = self.get_context_data()
-        # orderitems = context['orderitems']
-        #
-        # with transaction.atomic():
-        #     if orderitems.is_valid():
-        #         orderitems.instance = self.object
-        #         orderitems.save()
-        #     if self.object.get_total_cost() == 0:
-        #         self.object.delete()
+    return HttpResponseRedirect(reverse('adminapp:admin_orders'))
 
-        return super(OrderUpdate, self).form_valid(form)
+@login_required
+def order_cancel(request, pk):
+    ''' view for change order status to cancel '''
+
+    order = Order.objects.get(pk=pk)
+    if order.can_processed():
+        order.status = Order.CANCEL
+        order.save()
+
+    return HttpResponseRedirect(reverse('adminapp:admin_orders'))
 
 #endregion
 

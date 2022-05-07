@@ -34,7 +34,7 @@
                                     <td><a href="{% url 'adminapp:admin_order_update' item.id %}" style="color: dodgerblue">{{ item.id }}</a></td>
                                     <td><a href="{% url 'adminapp:admin_order_update' item.id %}" style="color: dodgerblue">{{ item.user.username }}</a></td></td>
                                     <td>{{ item.created }}</td>
-                                    <td>{{ item.status }}</td>
+                                    <td>{{ item.get_status_display }}</td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

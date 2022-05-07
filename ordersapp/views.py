@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
@@ -107,14 +108,14 @@ class OrderUpdate(UpdateView, BaseClassContextMixin):
             return super(OrderUpdate, self).form_valid(form)
 
 
-class OrderRead(DetailView):
+class OrderRead(DetailView, BaseClassContextMixin):
     ''' view for order detail '''
 
     model = Order
     title = 'GeekShop - Заказ'
 
 
-class OrderDelete(DeleteView):
+class OrderDelete(DeleteView, BaseClassContextMixin):
     ''' view for order delete '''
 
     model = Order
@@ -122,6 +123,7 @@ class OrderDelete(DeleteView):
     title = 'GeekShop - Удаление заказа'
 
 
+@login_required
 def forming_complete(requets, pk):
     ''' view for order change status '''
 

@@ -5,7 +5,7 @@ from django.urls import path
 from adminapp.views import (IndexTemplateView, UserListView, UserCreateView, UserUpdateView, UserDeleteView,
                             CategoriesListView, CategoryCreateView, CategoryUpdateView, CategoryDeleteView,
                             ProductListView, ProductCreateView,
-                            ProductUpdateView, ProductDeleteView, OrdersList, OrderUpdate)
+                            ProductUpdateView, ProductDeleteView, OrdersList, OrderUpdate, order_next, order_cancel)
 
 app_name = 'adminapp'
 urlpatterns = [
@@ -18,8 +18,8 @@ urlpatterns = [
 
     path('orders/', OrdersList.as_view(), name='admin_orders'),
     path('order-update/<int:pk>/', OrderUpdate.as_view(), name='admin_order_update'),
-    path('order-next/<int:pk>/', OrderUpdate.as_view(), name='admin_order_next'),
-    path('order-cancel/<int:pk>/', OrderUpdate.as_view(), name='admin_order_cancel'),
+    path('order-next/<int:pk>/', order_next, name='admin_order_next'),
+    path('order-cancel/<int:pk>/', order_cancel, name='admin_order_cancel'),
 
     path('categories/', CategoriesListView.as_view(), name='admin_categories'),
     path('category-create/', CategoryCreateView.as_view(), name='admin_category_create'),

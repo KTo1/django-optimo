@@ -18,10 +18,18 @@ class Order(models.Model):
         (FORMING, 'формируется'),
         (SEND_TO_PROCESSED, 'отправлен в обработку'),
         (PAID, 'оплачен'),
-        (PROCESSED, 'формируется'),
+        (PROCESSED, 'сборка'),
         (READY, 'готов'),
         (CANCEL, 'отменен'),
     )
+
+    STATUS_ORDER = {
+        FORMING: SEND_TO_PROCESSED,
+        SEND_TO_PROCESSED: PAID,
+        PAID: PROCESSED,
+        PROCESSED: READY,
+        READY: READY
+    }
 
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     created = models.DateTimeField(verbose_name='создан', auto_now=True)
@@ -43,6 +51,12 @@ class Order(models.Model):
 
     def get_items(self):
         pass
+
+    def can_processed(self):
+        return self.status != self.READY and self.status != self.CANCEL
+
+    def get_next_status(self, status):
+        return self.STATUS_ORDER[status]
 
     def delete(self, using=None, keep_parents=False):
         items = self.orderitems.select_related()
