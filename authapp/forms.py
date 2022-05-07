@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.db.models.fields.files import ImageFieldFile
-from authapp.models import User
+from authapp.models import User, UserProfile
 
 
 class Valid:
@@ -107,7 +107,7 @@ class UserProfileForm(UserChangeForm):
         fields = ('username', 'last_name', 'first_name', 'email', 'image', 'age')
 
     def __init__(self, *args, **kwargs):
-        super(UserChangeForm, self).__init__(*args, **kwargs)
+        super(UserProfileForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['readonly'] = True
         self.fields['email'].widget.attrs['readonly'] = True
 
@@ -130,3 +130,17 @@ class UserProfileForm(UserChangeForm):
             raise ValidationError(Valid.description)
 
         return image
+
+
+class UserProfileEditForm(forms.ModelForm):
+    '''form for edit profile'''
+
+    class Meta:
+        model = UserProfile
+        exclude = ('user', )
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileEditForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = f'form-control {"" if field_name == "gender" else "py-4"}'
