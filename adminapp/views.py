@@ -1,12 +1,16 @@
 # Create your views here.
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 
-from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm, UserAdminCategoryForm, UserAdminProductForm
+from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm, UserAdminCategoryForm, UserAdminProductForm, \
+    UserAdminOrderForm
 from authapp.models import User
 
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, BaseClassDeleteMixin, SuccessMessageMixin
 from mainapp.models import ProductCategories, Products
+from ordersapp.models import Order
 
 
 class IndexTemplateView(TemplateView, BaseClassContextMixin, CustomDispatchMixin):
@@ -57,6 +61,50 @@ class UserDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
     success_url = reverse_lazy('adminapp:admin_users')
     context_object_name = 'user_select'
 
+
+#endregion
+
+# region orders
+
+class OrdersList(ListView, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for orders list '''
+
+    model = Order
+    template_name = 'adminapp/admin-orders-read.html'
+    title = 'Администраторский раздел - Заказы'
+
+class OrderUpdate(UpdateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for update order '''
+
+    model = Order
+    template_name = 'adminapp/admin-orders-update-delete.html'
+    title = 'Администраторский раздел - Редактирование заказа'
+    form_class = UserAdminOrderForm
+    success_message = "Заказ успешно отредактирован."
+    success_url = reverse_lazy('adminapp:admin_orders')
+
+
+@login_required
+def order_next(request, pk):
+    ''' view for change order status to next '''
+
+    order = Order.objects.get(pk=pk)
+    if order.can_processed():
+        order.status = order.get_next_status(order.status)
+        order.save()
+
+    return HttpResponseRedirect(reverse('adminapp:admin_orders'))
+
+@login_required
+def order_cancel(request, pk):
+    ''' view for change order status to cancel '''
+
+    order = Order.objects.get(pk=pk)
+    if order.can_processed():
+        order.status = Order.CANCEL
+        order.save()
+
+    return HttpResponseRedirect(reverse('adminapp:admin_orders'))
 
 #endregion
 

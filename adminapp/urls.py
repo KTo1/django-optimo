@@ -1,18 +1,3 @@
-"""geekshop URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 
 from django.urls import path
 # from adminapp.views import products
@@ -20,7 +5,7 @@ from django.urls import path
 from adminapp.views import (IndexTemplateView, UserListView, UserCreateView, UserUpdateView, UserDeleteView,
                             CategoriesListView, CategoryCreateView, CategoryUpdateView, CategoryDeleteView,
                             ProductListView, ProductCreateView,
-                            ProductUpdateView, ProductDeleteView)
+                            ProductUpdateView, ProductDeleteView, OrdersList, OrderUpdate, order_next, order_cancel)
 
 app_name = 'adminapp'
 urlpatterns = [
@@ -30,6 +15,11 @@ urlpatterns = [
     path('user-create/', UserCreateView.as_view(), name='admin_user_create'),
     path('user-update/<int:pk>/', UserUpdateView.as_view(), name='admin_user_update'),
     path('user-delete/<int:pk>/', UserDeleteView.as_view(), name='admin_user_delete'),
+
+    path('orders/', OrdersList.as_view(), name='admin_orders'),
+    path('order-update/<int:pk>/', OrderUpdate.as_view(), name='admin_order_update'),
+    path('order-next/<int:pk>/', order_next, name='admin_order_next'),
+    path('order-cancel/<int:pk>/', order_cancel, name='admin_order_cancel'),
 
     path('categories/', CategoriesListView.as_view(), name='admin_categories'),
     path('category-create/', CategoryCreateView.as_view(), name='admin_category_create'),
