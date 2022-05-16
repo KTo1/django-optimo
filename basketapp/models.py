@@ -1,3 +1,5 @@
+from select import select
+
 from django.db import models
 
 
@@ -6,8 +8,20 @@ from authapp.models import User
 from mainapp.models import Products
 
 
+class BasketQuerySet(models.QuerySet):
+    ''' manager for basket query set '''
+
+    def delete(self, *args, **kwargs):
+        for item in self:
+            item.product.quantity += item.quantity
+            item.product.save()
+        super(BasketQuerySet, self).delete(*args, **kwargs)
+
+
 class Basket(models.Model):
     ''' model fo basket '''
+
+    objects = BasketQuerySet.as_manager()
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
@@ -30,3 +44,18 @@ class Basket(models.Model):
 
     def total_quantity(self):
         return sum(basket.quantity for basket in self.baskets)
+
+    def save(self, *args, **kwargs):
+        item = Basket.get_item(self.pk) if self.pk else 0
+        self.product.quantity -= self.quantity - item
+        self.product.save()
+        super(Basket, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super(Basket, self).delete(*args, **kwargs)
+
+    @staticmethod
+    def get_item(pk):
+        return Basket.objects.get(pk=pk).quantity
