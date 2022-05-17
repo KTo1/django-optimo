@@ -122,7 +122,6 @@ class CategoriesListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategories
     template_name = 'adminapp/admin-categories-read.html'
     title = 'Администраторский раздел - Категории'
-    context_object_name = 'categories'
 
 
 class CategoryCreateView(CreateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
@@ -143,7 +142,6 @@ class CategoryUpdateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin,
     template_name = 'adminapp/admin-categories-update-delete.html'
     title = 'Администраторский раздел - Редактирование категории'
     form_class = UserAdminCategoryForm
-    context_object_name = 'category_select'
     success_message = "Категория успешно обновлена."
     success_url = reverse_lazy('adminapp:admin_categories')
 
@@ -153,7 +151,6 @@ class CategoryDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
 
     model = ProductCategories
     success_url = reverse_lazy('adminapp:admin_categories')
-    context_object_name = 'category_select'
 
 #endregion
 
