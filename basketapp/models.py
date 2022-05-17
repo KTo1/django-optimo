@@ -11,11 +11,12 @@ from mainapp.models import Products
 class BasketQuerySet(models.QuerySet):
     ''' manager for basket query set '''
 
-    def delete(self, *args, **kwargs):
-        for item in self:
-            item.product.quantity += item.quantity
-            item.product.save()
-        super(BasketQuerySet, self).delete(*args, **kwargs)
+    pass
+    # def delete(self, *args, **kwargs):
+    #     for item in self:
+    #         item.product.quantity += item.quantity
+    #         item.product.save()
+    #     super(BasketQuerySet, self).delete(*args, **kwargs)
 
 
 class Basket(models.Model):
@@ -45,17 +46,18 @@ class Basket(models.Model):
     def total_quantity(self):
         return sum(basket.quantity for basket in self.baskets)
 
-    def save(self, *args, **kwargs):
-        item = Basket.get_item(self.pk) if self.pk else 0
-        self.product.quantity -= self.quantity - item
-        self.product.save()
-        super(Basket, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     pass
+    #     # item = Basket.get_item(self.pk) if self.pk else 0
+    #     # self.product.quantity -= self.quantity - item
+    #     # self.product.save()
+    #     # super(Basket, self).save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        self.product.quantity += self.quantity
-        self.product.save()
-        super(Basket, self).delete(*args, **kwargs)
+    # def delete(self, *args, **kwargs):
+    #     self.product.quantity += self.quantity
+    #     self.product.save()
+    #     super(Basket, self).delete(*args, **kwargs)
 
-    @staticmethod
-    def get_item(pk):
-        return Basket.objects.get(pk=pk).quantity
+    # @staticmethod
+    # def get_item(pk):
+    #     return Basket.objects.get(pk=pk).quantity
