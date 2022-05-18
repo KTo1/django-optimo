@@ -10,10 +10,21 @@ window.onload = function () {
         orderSummaryUpdate()
     });
 
-    $('.form-control').change(function(){
-        if($(this).val() == 0) return false;
+    $('select').change(function(){
+        product_id = $(event.target).val();
+        if(product_id === 0) return false;
 
-        alert($(this).val());
+        orderitem_id = event.target.name.replace('orderitems-', '').replace('-product', '');
+
+        $.ajax(
+            {
+                url: '/products/get_price/' + product_id + '/',
+                success: function (data){
+                   $('input[name=orderitems-' + orderitem_id + '-price]').val(parseFloat(data.result));
+                   orderSummaryUpdate();
+                }
+            }
+        )
     });
 
     function orderSummaryUpdate(){
