@@ -75,7 +75,7 @@ class OrderUpdate(UpdateView, BaseClassContextMixin):
     model = Order
     fields = []
     success_url = reverse_lazy('ordersapp:list')
-    title = 'GeekShop - Новый заказ'
+    title = 'GeekShop - Изменить заказ'
 
     def get_context_data(self, **kwargs):
         context = super(OrderUpdate, self).get_context_data()
