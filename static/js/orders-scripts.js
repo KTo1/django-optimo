@@ -1,7 +1,5 @@
 window.onload = function () {
 
-    let quantity, price, orderitem_num;
-
     let total_forms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val())
 
     $('.order_form').on('click', 'input[type=number]', function (){
@@ -12,9 +10,14 @@ window.onload = function () {
         orderSummaryUpdate()
     });
 
+    $('.form-control').change(function(){
+        if($(this).val() == 0) return false;
+
+        alert($(this).val());
+    });
+
     function orderSummaryUpdate(){
-        let order_total_cost = 0;
-        let order_total_quantity = 0;
+        let quantity = 0, price = 0, order_total_cost = 0, order_total_quantity = 0;
 
         for (let i = 0; i < total_forms; i++) {
             quantity = parseInt($('input[name=orderitems-' + i + '-quantity]').val()) || 0;
