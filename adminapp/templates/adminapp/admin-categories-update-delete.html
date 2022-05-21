@@ -2,9 +2,9 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h1 class="mt-4">Редактирование категории | {{ category_select.name }}</h1>
+        <h1 class="mt-4">Редактирование категории | {{ object.name }}</h1>
         <div class="card-body">
-            <form action="{% url 'adminapp:admin_category_update' category_select.id%}" method="post">
+            <form action="{% url 'adminapp:admin_category_update' object.id%}" method="post">
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="col-lg-6">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </form>
-            <form action="{% url 'adminapp:admin_category_delete' category_select.id %}" method="post" ,
+            <form action="{% url 'adminapp:admin_category_delete' object.id %}" method="post" ,
                   enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">

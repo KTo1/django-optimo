@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.views.generic import DetailView, TemplateView, ListView
 # Create your views here.
 from mainapp.mixin import BaseClassContextMixin
@@ -33,3 +34,8 @@ class ProductsView(ListView, BaseClassContextMixin):
 class ProductDetail(DetailView):
     model = Products
     template_name ='mainapp/detail.html'
+
+
+def get_price(request, pk):
+    product_price = Products.objects.get(id=pk).price
+    return JsonResponse({'result': product_price})

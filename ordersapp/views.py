@@ -43,7 +43,6 @@ class OrderCreate(CreateView, BaseClassContextMixin):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
                     form.initial['price'] = basket_items[num].product.price
-                # basket_items.delete()
             else:
                 form_set = OrderFormSet()
 
@@ -76,7 +75,7 @@ class OrderUpdate(UpdateView, BaseClassContextMixin):
     model = Order
     fields = []
     success_url = reverse_lazy('ordersapp:list')
-    title = 'GeekShop - Новый заказ'
+    title = 'GeekShop - Изменить заказ'
 
     def get_context_data(self, **kwargs):
         context = super(OrderUpdate, self).get_context_data()

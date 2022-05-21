@@ -10,7 +10,7 @@ from authapp.models import User
 
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, BaseClassDeleteMixin, SuccessMessageMixin
 from mainapp.models import ProductCategories, Products
-from ordersapp.models import Order
+from ordersapp.models import Order, OrderItem
 
 
 class IndexTemplateView(TemplateView, BaseClassContextMixin, CustomDispatchMixin):
@@ -104,6 +104,12 @@ def order_cancel(request, pk):
         order.status = Order.CANCEL
         order.save()
 
+        items = OrderItem.objects.filter(order_id=order.id)
+        for item in items:
+            product = Products.objects.get(id=item.product_id)
+            product.quantity += item.quantity
+            product.save()
+
     return HttpResponseRedirect(reverse('adminapp:admin_orders'))
 
 #endregion
@@ -116,7 +122,6 @@ class CategoriesListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategories
     template_name = 'adminapp/admin-categories-read.html'
     title = 'Администраторский раздел - Категории'
-    context_object_name = 'categories'
 
 
 class CategoryCreateView(CreateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
@@ -137,7 +142,6 @@ class CategoryUpdateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin,
     template_name = 'adminapp/admin-categories-update-delete.html'
     title = 'Администраторский раздел - Редактирование категории'
     form_class = UserAdminCategoryForm
-    context_object_name = 'category_select'
     success_message = "Категория успешно обновлена."
     success_url = reverse_lazy('adminapp:admin_categories')
 
@@ -147,7 +151,6 @@ class CategoryDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
 
     model = ProductCategories
     success_url = reverse_lazy('adminapp:admin_categories')
-    context_object_name = 'category_select'
 
 #endregion
 

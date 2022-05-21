@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from django.urls import path
-from mainapp.views import ProductsView, ProductDetail
+from mainapp.views import ProductsView, ProductDetail, get_price
 
 app_name = 'mainapp'
 urlpatterns = [
@@ -23,4 +23,5 @@ urlpatterns = [
     path('detail/<int:pk>/', ProductDetail.as_view(), name='detail'),
     path('category/<int:category_id>/', ProductsView.as_view(), name='category'),
     path('page/<int:page>/', ProductsView.as_view(), name='page'),
+    path('get_price/<int:pk>/', get_price, name='get_price'),
 ]
