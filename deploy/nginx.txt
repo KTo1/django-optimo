@@ -1,0 +1,15 @@
+server{
+    listen 80;
+    server_name 194.67.111.199;
+    location = /favicon.ico {access_log off; log_not_found off;}
+    location /static/ {
+		root /home/django/django-optimo;
+    }
+    location /media/ {
+		root /home/django/django-optimo;
+    }
+    location / {
+		include proxy_params;
+		proxy_pass http://unix:/home/django/django-optimo/geekshop/geekshop.sock;
+    }
+}
