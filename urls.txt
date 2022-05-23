@@ -1,0 +1,3 @@
+http://127.0.0.1:8000/authapp/login/ POST username=kto&password=1
+http://127.0.0.1:8000/authapp/profile/
+http://127.0.0.1:8000/products/detail/1/
