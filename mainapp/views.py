@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.views.generic import DetailView, TemplateView, ListView
+
 # Create your views here.
 from mainapp.mixin import BaseClassContextMixin
 from mainapp.models import ProductCategories, Products

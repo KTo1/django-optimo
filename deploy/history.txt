@@ -1,0 +1,82 @@
+генерируем ключи и открытый ключ кладем в ГИТ, в деплойкейс
+	ssh-keygen
+
+далее обновляем все
+	apt update
+
+устанавливаем nginx
+	apt install nginx
+
+теперь прости господи, постгресс
+	apt install postgresql postgresql-contrib
+
+пайтон
+	apt install python3-venv
+
+меняем доступность сервера 
+	/etc/postgresql/12/main/pg_hba.conf
+
+	# Database administrative login by Unix domain socket
+	local   all             postgres                                trust
+
+рестарт 
+	systemctl restart postgresql
+	systemctl status postgresql
+
+воздаем пользователя
+	useradd -g www-data -m django
+
+клонируем репозиторий, переключаемся на ветку дев )
+	cd /home/django 
+	git clone .... some ... 
+
+создаем окружение
+	cd ..
+	python3 -m venv venv 
+	source venv/bin/activate
+	pip install django-optimo/requirements.txt 
+	pip install wheel
+	pip install gunicorn 
+
+теперь датабазя
+	psql -U postgres
+	create database geekshop;
+	exit
+
+	python manage.py makemigrations
+	python manage.py migrate
+	python manage.py fill_db
+
+запуск
+	python manage.py runserver 0.0.0.0:8000
+
+автозапуск (файл gunicorn.service)
+	touch /etc/systemd/system/gunicorn.service
+
+	chown -R django /home/django
+
+	systemctl enable gunicorn
+	systemctl start gunicorn
+	systemctl status gunicorn
+
+nginx (geekshop)
+	touch /etc/nginx/sites-available/geekshop
+
+Прокидываем конфиг
+	ln -s /etc/nginx/sites-available/geekshop /etc/nginx/sites-enabled/
+
+Проверяем конфиг 
+	nginx -t
+
+Удалить конфиг по умолчанию
+	rm /etc/nginx/sites-enabled/default
+
+Финал:
+	systemctl restart nginx
+	systemctl status nginx
+
+
+
+
+
+
