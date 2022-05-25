@@ -31,4 +31,6 @@ class Products(models.Model):
     )
 
     def __str__(self):
-        return f'{self.category} | {self.name}'
+        # Категория лишний запрос, если убрать то будет работать быстрее
+        # return f'{self.category} | {self.name}'
+        return self.name

@@ -22,7 +22,7 @@ class BasketQuerySet(models.QuerySet):
 class Basket(models.Model):
     ''' model fo basket '''
 
-    objects = BasketQuerySet.as_manager()
+    # objects = BasketQuerySet.as_manager()
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
@@ -35,7 +35,7 @@ class Basket(models.Model):
 
     @property
     def baskets(self):
-        return Basket.objects.filter(user=self.user)
+        return Basket.objects.filter(user=self.user).select_related('product')
 
     def sum(self):
         return self.quantity * self.product.price
