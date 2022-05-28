@@ -123,7 +123,7 @@ else:
         }
     }
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    LOCATION_MEMCACHED = '194.67.111.199:11211'
+    LOCATION_MEMCACHED = '127.0.0.1:11211'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.http import HttpResponseRedirect, JsonResponse
 
 from django.template.loader import render_to_string
@@ -8,6 +10,13 @@ from mainapp.models import Products
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+def clear_baskets_cache():
+    if settings.LOW_CACHE:
+        key = 'link_basket'
+        link_object = cache.get(key)
+        if link_object is not None:
+            cache.set(key, None)
 
 @login_required
 def basket_add(request, product_id):
@@ -33,6 +42,8 @@ def basket_add(request, product_id):
     product.quantity -= 1
     product.save()
 
+    clear_baskets_cache()
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
@@ -45,6 +56,8 @@ def basket_remove(request, basket_id):
 
     product.save()
     basket.delete()
+
+    clear_baskets_cache()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -63,4 +76,6 @@ def basket_edit(request, basket_id, quantity):
 
         result = render_to_string('basketapp/basket.html', context)
 
+        clear_baskets_cache()
+        
         return JsonResponse({'result': result})
