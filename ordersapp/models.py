@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 
 from authapp.models import User
 from mainapp.models import Products
@@ -41,16 +42,19 @@ class Order(models.Model):
     def __str__(self):
         return f'Текущий заказ {self.pk}'
 
+    @cached_property
+    def get_items_cached(self):
+        return self.orderitems.select_related()
+
     def get_total_cost(self):
-        items = self.orderitems.select_related()
+        # items = self.orderitems.select_related()
+        items = self.get_items_cached
         return sum(list(map(lambda x:x.get_product_cost(), items)))
 
     def get_total_quantity(self):
-        items = self.orderitems.select_related()
+        # items = self.orderitems.select_related()
+        items = self.get_items_cached
         return sum([x.quantity for x in items])
-
-    def get_items(self):
-        pass
 
     def can_processed(self):
         return self.status != self.READY and self.status != self.CANCEL
@@ -59,7 +63,8 @@ class Order(models.Model):
         return self.STATUS_ORDER[status]
 
     def delete(self, using=None, keep_parents=False):
-        items = self.orderitems.select_related()
+        # items = self.orderitems.select_related()
+        items = self.get_items_cached
         for item in items:
             item.product.quantity += item.quantity
             item.save()
