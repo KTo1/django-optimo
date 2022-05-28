@@ -15,7 +15,7 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin):
     title = 'GeekShop'
 
 
-@method_decorator(cache_page(3600), name='dispatch')
+# @method_decorator(cache_page(3600), name='dispatch')
 class ProductsView(ListView, BaseClassContextMixin):
     ''' view for products'''
 
