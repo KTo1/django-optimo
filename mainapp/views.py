@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.views.generic import DetailView, TemplateView, ListView
 
 # Create your views here.
@@ -42,6 +42,7 @@ def get_product_cached(pk):
 
 
 # @method_decorator(cache_page(3600), name='dispatch')
+# @never_cache
 class ProductsView(ListView, BaseClassContextMixin):
     ''' view for products'''
 
