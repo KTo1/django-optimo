@@ -1,16 +1,22 @@
-asgiref==3.5.0
+asgiref @ file:///C:/Projects/Python/djangaaa/meet_django/venv/Scripts/asgiref-3.5.0-py3-none-any.whl
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.12
 cryptography==37.0.1
 defusedxml==0.7.1
 Django==3.2.6
+django-debug-toolbar==3.4.0
+django-debug-toolbar-template-profiler==2.0.2
+django-extensions==3.1.5
 idna==3.3
 oauthlib==3.2.0
-Pillow==9.0.1
+Pillow @ file:///C:/Projects/Python/djangaaa/meet_django/venv/Scripts/Pillow-9.0.1-cp310-cp310-win_amd64.whl
+pkginfo @ file:///C:/Projects/Python/djangaaa/meet_django/venv/Scripts/pkginfo-1.8.2-py2.py3-none-any.whl
 psycopg2-binary==2.9.3
 pycparser==2.21
+pydotplus==2.0.2
 PyJWT==2.3.0
+pyparsing==3.0.9
 python-dotenv==0.20.0
 python3-openid==3.2.0
 pytz==2022.1
@@ -18,5 +24,7 @@ requests==2.27.1
 requests-oauthlib==1.3.1
 social-auth-app-django==5.0.0
 social-auth-core==4.2.0
-sqlparse==0.4.2
+sqlparse @ file:///C:/Projects/Python/djangaaa/meet_django/venv/Scripts/sqlparse-0.4.2-py3-none-any.whl
+tzdata @ file:///C:/Projects/Python/djangaaa/meet_django/venv/Scripts/tzdata-2022.1-py2.py3-none-any.whl
 urllib3==1.26.9
+wrapt==1.14.1
