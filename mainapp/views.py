@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, TemplateView, ListView
 
 # Create your views here.
@@ -13,6 +14,7 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin):
     title = 'GeekShop'
 
 
+@cache_page(3600)
 class ProductsView(ListView, BaseClassContextMixin):
     ''' view for products'''
 
