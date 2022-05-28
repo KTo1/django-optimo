@@ -20,13 +20,25 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin):
 def get_category_cached():
     if settings.LOW_CACHE:
         key = 'link_category'
-        link_category = cache.get(key)
-        if link_category is None:
-            link_category = ProductCategories.objects.filter(is_active=True)
-            cache.set(key, link_category)
-        return link_category
+        link_object = cache.get(key)
+        if link_object is None:
+            link_object = ProductCategories.objects.filter(is_active=True)
+            cache.set(key, link_object)
+        return link_object
     else:
         return ProductCategories.objects.filter(is_active=True)
+
+
+def get_product_cached(pk):
+    if settings.LOW_CACHE:
+        key = 'link_product'
+        link_object = cache.get(key)
+        if link_object is None:
+            link_object = Products.objects.get(id=pk)
+            cache.set(key, link_object)
+        return link_object
+    else:
+        return Products.objects.get(id=pk)
 
 
 # @method_decorator(cache_page(3600), name='dispatch')
@@ -37,9 +49,14 @@ class ProductsView(ListView, BaseClassContextMixin):
     template_name = 'mainapp/products.html'
     title = 'GeekShop - Каталог'
     # categories = ProductCategories.objects.filter(is_active=True)
-    categories = get_category_cached()
+    # categories = get_category_cached()
     paginate_by = 3
     context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductsView, self).get_context_data()
+        context['categories'] = get_category_cached()
+        return context
 
     def paginate_queryset(self, queryset, page_size):
         if self.kwargs.get('category_id'):
@@ -51,10 +68,19 @@ class ProductsView(ListView, BaseClassContextMixin):
 
 
 class ProductDetail(DetailView):
+    ''' view for product detail '''
+
     model = Products
     template_name ='mainapp/detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ProductDetail, self).get_context_data()
+        context['Product'] = get_product_cached(self.kwargs.get('pk'))
+        return context
+
 
 def get_price(request, pk):
+    ''' price ajax request '''
+
     product_price = Products.objects.get(id=pk).price
     return JsonResponse({'result': product_price})
