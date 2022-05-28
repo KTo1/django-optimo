@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -15,6 +17,18 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin):
     title = 'GeekShop'
 
 
+def get_category_cached():
+    if settings.LOW_CACHE:
+        key = 'link_category'
+        link_category = cache.get(key)
+        if link_category is None:
+            link_category = ProductCategories.objects.filter(is_active=True)
+            cache.set(key, link_category)
+        return link_category
+    else:
+        return ProductCategories.objects.filter(is_active=True)
+
+
 # @method_decorator(cache_page(3600), name='dispatch')
 class ProductsView(ListView, BaseClassContextMixin):
     ''' view for products'''
@@ -22,7 +36,8 @@ class ProductsView(ListView, BaseClassContextMixin):
     model = Products
     template_name = 'mainapp/products.html'
     title = 'GeekShop - Каталог'
-    categories = ProductCategories.objects.filter(is_active=True)
+    # categories = ProductCategories.objects.filter(is_active=True)
+    categories = get_category_cached()
     paginate_by = 3
     context_object_name = 'products'
 
