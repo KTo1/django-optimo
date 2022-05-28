@@ -111,6 +111,7 @@ if WORK_ON_LOCAL_SERVER:
         }
     }
     STATICFILES_DIRS = (BASE_DIR / 'static', )
+    LOCATION_MEMCACHED = '127.0.0.1:11211'
 else:
     DATABASES = {
         'default': {
@@ -120,6 +121,7 @@ else:
         }
     }
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    LOCATION_MEMCACHED = '194.67.111.199:11211'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -232,3 +234,16 @@ if DEBUG:
         'debug_toolbar.panels.profiling.ProfilingPanel',
         'template_profiler_panel.panels.template.TemplateProfilerPanel',
     ]
+
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 120
+CACHE_MIDDLEWARE_KEY_PREFIX = 'geekshop'
+LOW_CACH = True
+
+CACHES = {
+    'default': {
+        'BACKEND':'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': LOCATION_MEMCACHED
+    }
+}
