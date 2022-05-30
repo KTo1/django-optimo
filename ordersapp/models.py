@@ -72,6 +72,12 @@ class Order(models.Model):
         self.is_active = False
         self.save()
 
+    def get_summary(self):
+        items = self.get_items_cached
+        return {
+            'get_total_cost': sum(list(map(lambda x:x.get_product_cost(), items))),
+            'get_total_quantity': sum([x.quantity for x in items])
+        }
 
 class OrderItem(models.Model):
     ''' model for order items '''
