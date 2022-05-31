@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.db import connection
+from django.db.models import F
 from django.http import HttpResponseRedirect, JsonResponse
 
 from django.template.loader import render_to_string
@@ -32,15 +34,20 @@ def basket_add(request, product_id):
     # В корзину добавляем
     if baskets:
         basket = baskets.first()
-        basket.quantity += 1
+        # basket.quantity += 1
+        basket.quantity = F('quantity') + 1
         basket.save()
     else:
         Basket.objects.create(user=user, product=product, quantity=1)
 
     # TODO сделать проверку на отрицательные остатки
     # С товаров списываем, что-то вроде резерва
-    product.quantity -= 1
+    # product.quantity -= 1
+    product.quantity = F('quantity') - 1
     product.save()
+
+    queries = [q for q in connection.queries if 'UPDATE' in q['sql']]
+    print(queries)
 
     clear_baskets_cache()
 
@@ -52,7 +59,8 @@ def basket_remove(request, basket_id):
 
     basket = Basket.objects.get(id=basket_id)
     product = Products.objects.get(id=basket.product_id)
-    product.quantity += basket.quantity
+    # product.quantity += basket.quantity
+    product.quantity = F('quantity') + basket.quantity
 
     product.save()
     basket.delete()

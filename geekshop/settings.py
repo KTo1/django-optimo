@@ -60,20 +60,20 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # для siege отключить
-    #'django.middleware.csrf.CsrfViewMiddleware',
-    'geekshop.mid.DisableCSRFMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    #'geekshop.mid.DisableCSRFMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # my
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware'
+    #'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = 'geekshop.urls'
@@ -113,7 +113,6 @@ if WORK_ON_LOCAL_SERVER:
         }
     }
     STATICFILES_DIRS = (BASE_DIR / 'static', )
-    LOCATION_MEMCACHED = '127.0.0.1:11211'
 else:
     DATABASES = {
         'default': {
@@ -124,6 +123,19 @@ else:
     }
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     LOCATION_MEMCACHED = '127.0.0.1:11211'
+
+    CACHE_MIDDLEWARE_ALIAS = 'default'
+    CACHE_MIDDLEWARE_SECONDS = 120
+    CACHE_MIDDLEWARE_KEY_PREFIX = 'geekshop'
+
+    CACHES = {
+        'default': {
+            'BACKEND':'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': LOCATION_MEMCACHED
+        }
+    }
+
+LOW_CACHE = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -236,16 +248,3 @@ if DEBUG:
         'debug_toolbar.panels.profiling.ProfilingPanel',
         'template_profiler_panel.panels.template.TemplateProfilerPanel',
     ]
-
-
-CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 120
-CACHE_MIDDLEWARE_KEY_PREFIX = 'geekshop'
-LOW_CACHE = True
-
-CACHES = {
-    'default': {
-        'BACKEND':'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': LOCATION_MEMCACHED
-    }
-}

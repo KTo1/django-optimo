@@ -1,5 +1,6 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
@@ -107,7 +108,8 @@ def order_cancel(request, pk):
         items = OrderItem.objects.filter(order_id=order.id)
         for item in items:
             product = Products.objects.get(id=item.product_id)
-            product.quantity += item.quantity
+            # product.quantity += item.quantity
+            product.quantity = F('quantity') + item.quantity
             product.save()
 
     return HttpResponseRedirect(reverse('adminapp:admin_orders'))
