@@ -23,10 +23,10 @@ class Command(BaseCommand):
         action_2_discount = 0.15
         action_3_discount = 0.05
 
-        action_1_condition = Q(order__updated_lte=F('created_at') + action_1_timedelta)
-        action_2_condition = Q(order__updated_gt=F('created_at') + action_1_timedelta
-                                                 + Q(order__updated_lte=F('created_at') + action_2_timedelta))
-        action_3_condition = Q(order__updated_gt=F('created_at') + action_2_timedelta)
+        action_1_condition = Q(order__updated__lte=F('order__created') + action_1_timedelta)
+        action_2_condition = Q(order__updated__gt=F('order__created') + action_1_timedelta) & Q(
+            order__updated__lte=F('order__created') + action_2_timedelta)
+        action_3_condition = Q(order__updated__gt=F('order__created') + action_2_timedelta)
 
         action_1_order = When(action_1_condition, then=ACTION_1)
         action_2_order = When(action_2_condition, then=ACTION_2)
@@ -37,7 +37,7 @@ class Command(BaseCommand):
         action_3_price = When(action_3_condition, F('product__price') * F('quantity') * action_3_discount)
 
         test_data = OrderItem.objects.annotate(
-            action_order = Case(
+            action_order=Case(
                 action_1_order,
                 action_2_order,
                 action_3_order,
@@ -52,4 +52,15 @@ class Command(BaseCommand):
             )
         ).order_by('action_order', 'total_price').select_related()
 
-        list_data = PrettyTable()
+        list_data = PrettyTable(['Заказ', 'Товар', 'Скидка', 'Разница времени'])
+        list_data.align = 'l'
+
+        for order_item in test_data:
+            list_data.add_row([
+                f'{order_item.action_order} заказ №: {order_item.pk}',
+                f'{order_item.product.name:15}',
+                f'{abs(order_item.total_price):6.2f} руб.',
+                order_item.order.updated - order_item.order.created
+            ])
+
+        print(list_data)
