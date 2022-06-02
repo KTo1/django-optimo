@@ -66,7 +66,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     # для siege отключить
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'geekshop.mid.DisableCSRFMiddleware',
+    # 'geekshop.mid.DisableCSRFMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

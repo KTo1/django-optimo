@@ -40,7 +40,7 @@ class BaseClassContextMixin(ContextMixin):
 class BaseClassDeleteMixin(DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.is_active = False
+        self.object.is_active = not self.object.is_active
         self.object.save()
 
         return HttpResponseRedirect(self.get_success_url())

@@ -154,6 +154,17 @@ class CategoryDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
     model = ProductCategories
     success_url = reverse_lazy('adminapp:admin_categories')
 
+    def update_sub_elements(self, category):
+        sub_elements = Products.objects.filter(category=category)
+        for element in sub_elements:
+            element.is_active = category.is_active
+            element.save()
+
+    def post(self, request, *args, **kwargs):
+        post = super(CategoryDeleteView, self).post(request, *args, **kwargs)
+        self.update_sub_elements(self.get_object())
+        return post
+
 #endregion
 
 # region products
