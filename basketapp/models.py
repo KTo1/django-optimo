@@ -39,12 +39,12 @@ class Basket(models.Model):
 
     def sum(self):
         return self.quantity * self.product.price
-
-    def total_sum(self):
-        return sum(basket.sum() for basket in self.baskets)
-
-    def total_quantity(self):
-        return sum(basket.quantity for basket in self.baskets)
+    #
+    # def total_sum(self):
+    #     return sum(basket.sum() for basket in self.baskets)
+    #
+    # def total_quantity(self):
+    #     return sum(basket.quantity for basket in self.baskets)
 
     # def save(self, *args, **kwargs):
     #     pass
