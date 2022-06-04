@@ -13,12 +13,22 @@ from mainapp.models import Products
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
-def clear_baskets_cache():
+def refres_baskets_cache(user):
+    basket_total_sum = 0
+    basket_total_quantity = 0
+
+    link_object = Basket.objects.filter(user=user).select_related()
+
     if settings.LOW_CACHE:
         key = 'link_basket'
-        link_object = cache.get(key)
-        if link_object is not None:
-            cache.set(key, None)
+        cache.set(key, link_object)
+
+    for basket in link_object:
+        basket_total_sum += basket.quantity * basket.product.price
+        basket_total_quantity += basket.quantity
+
+    return {'baskets': link_object, 'basket_total_sum': basket_total_sum, 'basket_total_quantity': basket_total_quantity}
+
 
 @login_required
 def basket_add(request, product_id):
@@ -34,7 +44,6 @@ def basket_add(request, product_id):
     # В корзину добавляем
     if baskets:
         basket = baskets.first()
-        # basket.quantity += 1
         basket.quantity = F('quantity') + 1
         basket.save()
     else:
@@ -42,14 +51,13 @@ def basket_add(request, product_id):
 
     # TODO сделать проверку на отрицательные остатки
     # С товаров списываем, что-то вроде резерва
-    # product.quantity -= 1
     product.quantity = F('quantity') - 1
     product.save()
 
     queries = [q for q in connection.queries if 'UPDATE' in q['sql']]
     print(queries)
 
-    clear_baskets_cache()
+    refres_baskets_cache(user=user)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -59,13 +67,12 @@ def basket_remove(request, basket_id):
 
     basket = Basket.objects.get(id=basket_id)
     product = Products.objects.get(id=basket.product_id)
-    # product.quantity += basket.quantity
     product.quantity = F('quantity') + basket.quantity
 
     product.save()
     basket.delete()
 
-    clear_baskets_cache()
+    refres_baskets_cache(user=request.user)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -79,11 +86,8 @@ def basket_edit(request, basket_id, quantity):
             basket.quantity = quantity
             basket.save()
 
-        baskets = Basket.objects.filter(user=request.user)
-        context = {'baskets': baskets}
+        context = refres_baskets_cache(user=request.user)
 
         result = render_to_string('basketapp/basket.html', context)
 
-        clear_baskets_cache()
-        
         return JsonResponse({'result': result})
