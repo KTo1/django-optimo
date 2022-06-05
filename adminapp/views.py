@@ -21,6 +21,13 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin, CustomDispatchMixin
     title = 'Администраторский раздел - Главная'
 
 # region users
+class ActionsListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
+    template_name = 'adminapp/admin-actions-read.html'
+    title = 'Администраторский раздел - Пользователи'
+
+# endregion
+
+# region users
 
 class UserListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     ''' view for user list '''
