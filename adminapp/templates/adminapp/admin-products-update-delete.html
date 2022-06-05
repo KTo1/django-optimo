@@ -40,7 +40,11 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-2">
+                        <label class="small mb-1" for="{{ form.basic_price.id_for_label }}">Базовая цена</label>
+                        {{ form.basic_price }}
+                    </div>
+                    <div class="col-lg-2">
                         <label class="small mb-1" for="{{ form.price.id_for_label }}">Цена</label>
                         {{ form.price }}
                     </div>

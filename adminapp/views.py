@@ -5,8 +5,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 
+from actionsapp.models import Action
 from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm, UserAdminCategoryForm, UserAdminProductForm, \
-    UserAdminOrderForm
+    UserAdminOrderForm, UserAdminActionForm
 from authapp.models import User
 
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, BaseClassDeleteMixin, SuccessMessageMixin
@@ -22,8 +23,33 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin, CustomDispatchMixin
 
 # region users
 class ActionsListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for  actions list '''
+
+    model = Action
     template_name = 'adminapp/admin-actions-read.html'
-    title = 'Администраторский раздел - Пользователи'
+    title = 'Администраторский раздел - акции'
+
+
+class ActionCreateView(CreateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for create action '''
+
+    model = Action
+    template_name = 'adminapp/admin-action-create.html'
+    title = 'Администраторский раздел - Создание акции'
+    form_class = UserAdminActionForm
+    success_message = "Акция успешно создана."
+    success_url = reverse_lazy('adminapp:admin_actions')
+
+
+class ActionUpdateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for update category '''
+
+    model = Action
+    template_name = 'adminapp/admin-action-update-delete.html'
+    title = 'Администраторский раздел - Редактирование акции'
+    form_class = UserAdminActionForm
+    success_message = "Акция успешно обновлена."
+    success_url = reverse_lazy('adminapp:admin_actions')
 
 # endregion
 

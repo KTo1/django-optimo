@@ -4,6 +4,8 @@ import random
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.db.models.fields.files import ImageFieldFile
+
+from actionsapp.models import Action
 from authapp.models import User
 from mainapp.models import Products, ProductCategories
 from django import forms
@@ -150,7 +152,7 @@ class UserAdminProductForm(forms.ModelForm):
 
     class Meta:
         model = Products
-        fields = ('name', 'category', 'description', 'price', 'quantity', 'image')
+        fields = ('name', 'category', 'description', 'basic_price' ,'price', 'quantity', 'image')
 
     def __init__(self, *args, **kwargs):
         super(UserAdminProductForm, self).__init__(*args, **kwargs)
@@ -158,6 +160,7 @@ class UserAdminProductForm(forms.ModelForm):
         self.fields['name'].widget.attrs['placeholder'] = 'Имя'
         self.fields['category'].widget.attrs['placeholder'] = 'Категория'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание'
+        self.fields['basic_price'].widget.attrs['placeholder'] = 'Базовая цена'
         self.fields['price'].widget.attrs['placeholder'] = 'Цена'
         self.fields['quantity'].widget.attrs['placeholder'] = 'Количество'
 
@@ -165,4 +168,22 @@ class UserAdminProductForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control py-4'
 
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
+        self.fields['category'].widget.attrs['class'] = 'form-control'
+
+
+class UserAdminActionForm(forms.ModelForm):
+    '''form for admin category'''
+
+    class Meta:
+        model = Action
+        fields = ('name', 'category', 'percent')
+
+    def __init__(self, *args, **kwargs):
+        super(UserAdminActionForm, self).__init__(*args, **kwargs)
+
+        self.fields['name'].widget.attrs['placeholder'] = 'Имя'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
+
         self.fields['category'].widget.attrs['class'] = 'form-control'

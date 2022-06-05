@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'basketapp',
     'adminapp',
     'ordersapp',
+    'actionsapp',
 
     #install
     'social_django',

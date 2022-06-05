@@ -6,7 +6,7 @@ from adminapp.views import (IndexTemplateView, UserListView, UserCreateView, Use
                             CategoriesListView, CategoryCreateView, CategoryUpdateView, CategoryDeleteView,
                             ProductListView, ProductCreateView,
                             ProductUpdateView, ProductDeleteView, OrdersList, OrderUpdate, order_next, order_cancel,
-                            ActionsListView)
+                            ActionsListView, ActionCreateView, ActionUpdateView)
 
 app_name = 'adminapp'
 urlpatterns = [
@@ -33,4 +33,7 @@ urlpatterns = [
     path('product-delete/<int:pk>/', ProductDeleteView.as_view(), name='admin_product_delete'),
 
     path('actions/', ActionsListView.as_view(), name='admin_actions'),
+    path('action-create/', ActionCreateView.as_view(), name='admin_action_create'),
+    path('action-update/<int:pk>/', ActionUpdateView.as_view(), name='admin_action_update'),
+    path('action-delete/<int:pk>/', ActionsListView.as_view(), name='admin_action_delete'),
 ]
