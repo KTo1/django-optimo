@@ -1,14 +1,14 @@
 $(document).ready(function () {
     console.log('t')
-    $('#dataTableOrders').dataTable( {
+    $("table[name='dataTableOrder']").dataTable( {
         "ordering": true,
         "order": [[ 0, 'desc' ]]
-    } );
+    });
 
-    $('#dataTableActions').dataTable( {
+    $("table[name='dataTableActions']").dataTable( {
         "ordering": true,
         "order": [[ 2, 'asc' ], [ 4, 'desc' ]]
-    } );
+    });
 });
 
 
