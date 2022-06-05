@@ -162,6 +162,7 @@ class UserAdminProductForm(forms.ModelForm):
         self.fields['description'].widget.attrs['placeholder'] = 'Описание'
         self.fields['basic_price'].widget.attrs['placeholder'] = 'Базовая цена'
         self.fields['price'].widget.attrs['placeholder'] = 'Цена'
+        self.fields['price'].required = False
         self.fields['quantity'].widget.attrs['placeholder'] = 'Количество'
 
         for field_name, field in self.fields.items():

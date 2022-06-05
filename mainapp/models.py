@@ -31,6 +31,12 @@ class Products(models.Model):
         help_text='Designates whether this product should be treated as active. '
     )
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if not self.price:
+            self.price = self.basic_price
+        super(Products, self).save()
+
     def __str__(self):
         # Категория лишний запрос, если убрать то будет работать быстрее
         # return f'{self.category} | {self.name}'

@@ -21,7 +21,8 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin, CustomDispatchMixin
     template_name = 'adminapp/admin.html'
     title = 'Администраторский раздел - Главная'
 
-# region users
+# region actions
+
 class ActionsListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     ''' view for  actions list '''
 
@@ -40,6 +41,12 @@ class ActionCreateView(CreateView, SuccessMessageMixin, BaseClassContextMixin, C
     success_message = "Акция успешно создана."
     success_url = reverse_lazy('adminapp:admin_actions')
 
+    def post(self, request, *args, **kwargs):
+        category = ProductCategories.objects.get(pk=request.POST['category'])
+        percent = int(request.POST['percent'])
+        Action.update_products(category, percent)
+        return super(ActionCreateView, self).post(request, *args, **kwargs)
+
 
 class ActionUpdateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
     ''' view for update category '''
@@ -50,6 +57,24 @@ class ActionUpdateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin, C
     form_class = UserAdminActionForm
     success_message = "Акция успешно обновлена."
     success_url = reverse_lazy('adminapp:admin_actions')
+
+    def post(self, request, *args, **kwargs):
+        action = self.get_object()
+        Action.update_products(action.category, action.percent)
+        return super(ActionUpdateView, self).post(request, *args, **kwargs)
+
+
+class ActionDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
+    ''' view for delete action '''
+
+    model = Action
+    template_name = 'adminapp/admin-action-update-delete.html'
+    success_url = reverse_lazy('adminapp:admin_actions')
+
+    def post(self, request, *args, **kwargs):
+        action = self.get_object()
+        Action.update_products(action.category, 0)
+        return super(ActionDeleteView, self).post(request, *args, **kwargs)
 
 # endregion
 

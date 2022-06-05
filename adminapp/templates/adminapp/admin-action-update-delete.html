@@ -6,6 +6,7 @@
         <div class="card-body">
             <form action="{% url 'adminapp:admin_action_update' object.id%}" method="post">
                 {% csrf_token %}
+
                 <div class="form-row">
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -29,15 +30,17 @@
                     </div>
                 </div>
             </form>
-{#            <form action="{% url 'adminapp:admin_action_delete' object.id %}" method="post" ,#}
-{#                  enctype="multipart/form-data">#}
-{#                {% csrf_token %}#}
-{#                <div class="row">#}
-{#                    <div class="col-lg-6" style="margin-top: 33px;">#}
-{#                        <input class="btn btn-danger btn-block" type="submit" value="Удалить">#}
-{#                    </div>#}
-{#                </div>#}
-{#            </form>#}
+
+            <form action="{% url 'adminapp:admin_action_delete' object.id %}" method="post" ,
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-6" style="margin-top: 33px;">
+                        <input class="btn btn-danger btn-block" type="submit" value="Удалить">
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
 {% endblock %}

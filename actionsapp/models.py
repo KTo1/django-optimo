@@ -19,11 +19,6 @@ class Action(models.Model):
     def __str__(self):
         return f'Акция {self.name} для - {self.category}'
 
+    @classmethod
     def update_products(self, category, percent):
         Products.objects.filter(category=category).update(price=F('basic_price') * ((100 - percent) / 100))
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-
-        self.update_products(self.category, self.percent)
-        super(Action, self).save()
