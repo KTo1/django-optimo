@@ -1,6 +1,8 @@
 window.onload = function (){
-    console.log(1)
+
     $('.basket_list').on('click', 'input[type="number"]', function (){
+
+        console.log('1')
 
         let t_href = event.target;
 

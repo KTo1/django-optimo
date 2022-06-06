@@ -1,4 +1,5 @@
 window.onload = function () {
+    console.log('1')
 
     let total_forms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val())
 
