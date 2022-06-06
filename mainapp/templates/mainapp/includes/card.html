@@ -14,7 +14,12 @@
                     <h4 class="card-title">
                         <a href="{% url 'mainapp:detail' product.id %}">{{ product.name }}</a>
                     </h4>
-                    <h5> {{ product.price|localize }} руб.</h5>
+                    {% if product.price != product.basic_price %}
+                        <h5> <strike>{{ product.basic_price|localize }} руб. </strike></h5>
+                        <h5> {{ product.price|localize }} руб.</h5>
+                    {% else %}
+                        <h5> {{ product.price|localize }} руб.</h5>
+                    {% endif %}
                     <p class="card-text"> {{ product.description }}</p>
                 </div>
                 <div class="card-footer text-center">
