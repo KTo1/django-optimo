@@ -56,7 +56,8 @@ class ProductsView(ListView, BaseClassContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super(ProductsView, self).get_context_data()
-        context['categories'] = get_category_cached()
+        # context['categories'] = get_category_cached()
+        context['categories'] = ProductCategories.objects.filter(is_active=True)
         return context
 
     def paginate_queryset(self, queryset, page_size):

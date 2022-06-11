@@ -22,8 +22,8 @@ def basket(request):
     basket_total_quantity = 0
 
     if request.user.is_authenticated:
-        # baskets = Basket.objects.filter(user=request.user).select_related()
-        baskets = get_baskets_cached(user=request.user)
+        baskets = Basket.objects.filter(user=request.user).select_related()
+        # baskets = get_baskets_cached(user=request.user)
         for basket in baskets:
             basket_total_sum += basket.quantity * basket.product.price
             basket_total_quantity += basket.quantity
