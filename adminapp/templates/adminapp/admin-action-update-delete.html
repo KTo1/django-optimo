@@ -1,0 +1,46 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="mt-4">Редактирование акции | {{ object.name }}</h1>
+        <div class="card-body">
+            <form action="{% url 'adminapp:admin_action_update' object.id%}" method="post">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="{{ form.name.id_for_label }}">Имя</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="small mb-1" for="{{ form.category.id_for_label }}">Категория</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="form-group">
+                            <label class="small mb-1" for="{{ form.percent.id_for_label }}">Процент</label>
+                            {{ form.percent }}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-6" style="margin-top: 33px;">
+                        <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+                    </div>
+                </div>
+            </form>
+
+            <form action="{% url 'adminapp:admin_action_delete' object.id %}" method="post" ,
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-6" style="margin-top: 33px;">
+                        <input class="btn btn-danger btn-block" type="submit" value="Удалить">
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

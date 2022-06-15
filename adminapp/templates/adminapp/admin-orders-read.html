@@ -10,7 +10,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered" name="dataTableOrder" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -19,14 +19,6 @@
                             <th>Статус</th>
                         </tr>
                         </thead>
-                        <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Имя пользователя</th>
-                            <th>Создан</th>
-                            <th>Статус</th>
-                        </tr>
-                        </tfoot>
                         <tbody>
                         {% for item in object_list %}
                             {% if item.is_active %}

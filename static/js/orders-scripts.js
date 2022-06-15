@@ -1,4 +1,25 @@
-window.onload = function () {
+// window.onload = function () {
+$(document).ready(function () {
+    console.log('1')
+
+    // basket
+
+    $('.basket_list').on('click', 'input[type="number"]', function (){
+
+        console.log('1')
+
+        let t_href = event.target;
+
+        $.ajax(
+            {
+                url: '/basket/edit/' + t_href.name + '/' + t_href.value + '/',
+                success: function (data){
+                   $('.basket_list').html(data.result)
+                }
+            }
+        )
+    })
+
 
     let total_forms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val())
 
@@ -55,4 +76,5 @@ window.onload = function () {
     function deleteOrderItem(row){
         orderSummaryUpdate()
     }
-}
+// }
+});

@@ -1,11 +1,13 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 
+from actionsapp.models import Action
 from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm, UserAdminCategoryForm, UserAdminProductForm, \
-    UserAdminOrderForm
+    UserAdminOrderForm, UserAdminActionForm
 from authapp.models import User
 
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin, BaseClassDeleteMixin, SuccessMessageMixin
@@ -18,6 +20,63 @@ class IndexTemplateView(TemplateView, BaseClassContextMixin, CustomDispatchMixin
 
     template_name = 'adminapp/admin.html'
     title = 'Администраторский раздел - Главная'
+
+# region actions
+
+class ActionsListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for  actions list '''
+
+    model = Action
+    template_name = 'adminapp/admin-actions-read.html'
+    title = 'Администраторский раздел - акции'
+
+
+class ActionCreateView(CreateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for create action '''
+
+    model = Action
+    template_name = 'adminapp/admin-action-create.html'
+    title = 'Администраторский раздел - Создание акции'
+    form_class = UserAdminActionForm
+    success_message = "Акция успешно создана."
+    success_url = reverse_lazy('adminapp:admin_actions')
+
+    def post(self, request, *args, **kwargs):
+        category = ProductCategories.objects.get(pk=request.POST['category'])
+        percent = int(request.POST['percent'])
+        Action.update_products(category, percent)
+        return super(ActionCreateView, self).post(request, *args, **kwargs)
+
+
+class ActionUpdateView(UpdateView, SuccessMessageMixin, BaseClassContextMixin, CustomDispatchMixin):
+    ''' view for update category '''
+
+    model = Action
+    template_name = 'adminapp/admin-action-update-delete.html'
+    title = 'Администраторский раздел - Редактирование акции'
+    form_class = UserAdminActionForm
+    success_message = "Акция успешно обновлена."
+    success_url = reverse_lazy('adminapp:admin_actions')
+
+    def post(self, request, *args, **kwargs):
+        action = self.get_object()
+        Action.update_products(action.category, action.percent)
+        return super(ActionUpdateView, self).post(request, *args, **kwargs)
+
+
+class ActionDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
+    ''' view for delete action '''
+
+    model = Action
+    template_name = 'adminapp/admin-action-update-delete.html'
+    success_url = reverse_lazy('adminapp:admin_actions')
+
+    def post(self, request, *args, **kwargs):
+        action = self.get_object()
+        Action.update_products(action.category, 0)
+        return super(ActionDeleteView, self).post(request, *args, **kwargs)
+
+# endregion
 
 # region users
 
@@ -107,7 +166,8 @@ def order_cancel(request, pk):
         items = OrderItem.objects.filter(order_id=order.id)
         for item in items:
             product = Products.objects.get(id=item.product_id)
-            product.quantity += item.quantity
+            # product.quantity += item.quantity
+            product.quantity = F('quantity') + item.quantity
             product.save()
 
     return HttpResponseRedirect(reverse('adminapp:admin_orders'))
@@ -151,6 +211,17 @@ class CategoryDeleteView(BaseClassDeleteMixin, CustomDispatchMixin):
 
     model = ProductCategories
     success_url = reverse_lazy('adminapp:admin_categories')
+
+    def update_sub_elements(self, category):
+        sub_elements = Products.objects.filter(category=category)
+        for element in sub_elements:
+            element.is_active = category.is_active
+            element.save()
+
+    def post(self, request, *args, **kwargs):
+        post = super(CategoryDeleteView, self).post(request, *args, **kwargs)
+        self.update_sub_elements(self.get_object())
+        return post
 
 #endregion
 

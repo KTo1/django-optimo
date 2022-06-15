@@ -1,0 +1,51 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="mt-4">Акции</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table mr-1"></i>
+                Акции (действует всегда последняя сохраненная акция для каждой категории)
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" name="dataTableActions" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя</th>
+                            <th>Категория</th>
+                            <th>Создана</th>
+                            <th>Изменена</th>
+                            <th>Активна</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in object_list %}
+                            <tr {% if not item.is_active %} class="table-warning" {% endif %}>
+                                <td><a href="{% url 'adminapp:admin_action_update' item.id %}"
+                                       style="color: dodgerblue">{{ item.id }}</a></td>
+                                <td><a href="{% url 'adminapp:admin_action_update' item.id %}"
+                                       style="color: dodgerblue">{{ item.name }}</a></td>
+                                </td>
+                                <td>{{ item.category }}</td>
+                                <td>{{ item.created }}</td>
+                                <td>{{ item.updated }}</td>
+                                <td class="text-center">
+                                    <i class="fas fa-{% if item.is_active %}check{% else %}times{% endif %}-circle"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'adminapp:admin_action_create' %}">
+                <button class="btn btn-success">Новая акция</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

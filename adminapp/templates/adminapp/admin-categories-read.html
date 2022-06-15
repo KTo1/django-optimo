@@ -18,13 +18,6 @@
                             <th>Активный</th>
                         </tr>
                         </thead>
-                        <tfoot>
-                        <tr>
-                            <th>Имя</th>
-                            <th>Описание</th>
-                            <th>Активный</th>
-                        </tr>
-                        </tfoot>
                         <tbody>
                         {% for object in object_list %}
                             <tr {% if not object.is_active %} class="table-warning" {% endif %}>

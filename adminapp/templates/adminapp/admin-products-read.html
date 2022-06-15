@@ -16,27 +16,19 @@
                             <th>Имя</th>
                             <th>Категория</th>
                             <th>Описание</th>
+                            <th>Базовая цена</th>
                             <th>Цена</th>
                             <th>Количество</th>
                             <th>Активный</th>
                         </tr>
                         </thead>
-                        <tfoot>
-                        <tr>
-                            <th>Имя</th>
-                            <th>Категория</th>
-                            <th>Описание</th>
-                            <th>Цена</th>
-                            <th>Количество</th>
-                            <th>Активный</th>
-                        </tr>
-                        </tfoot>
                         <tbody>
                         {% for product in products %}
                             <tr {% if not product.is_active %} class="table-warning" {% endif %}>
                                 <td><a href="{% url 'adminapp:admin_product_update' product.id %}" style="color: dodgerblue">{{ product.name }}</a></td>
                                 <td>{{ product.category }}</td>
                                 <td>{{ product.description }}</td>
+                                <td>{{ product.basic_price }}</td>
                                 <td>{{ product.price }}</td>
                                 <td>{{ product.quantity }}</td>
                                 <td class="text-center">
